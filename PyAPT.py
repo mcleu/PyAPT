@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 """
 APT Motor Controller for Thorlabs
-Adopted from 
+Adopted from
 https://github.com/HaeffnerLab/Haeffner-Lab-LabRAD-Tools/blob/master/cdllservers/APTMotor/APTMotorServer.py
 With thanks to SeanTanner@ThorLabs for providing APT.dll ad APT.lib
 
 
 V1.0
-20141125 V1.0    First working version 
+20141125 V1.0    First working version
+20141201 V1.0a   Use short notation for moving (movRelative -> mRel)
 
 Michael Leung
 mcleung@stanford.edu
@@ -37,24 +38,34 @@ class APTMotor():
         self.aptdll.EnableEventDlg(True)
         self.aptdll.APTInit()
         #print 'APT initialized'
-        self.HWType = c_long(HWTYPE) # 31 means TDC001 controller
+        self.HWType = c_long(HWTYPE)
         self.SerialNum = c_long(SerialNum)
-        #self.SerialNum = self.getSerialNumber(0)      
-        #print self.SerialNum
         self.initializeHardwareDevice()
-    
+        # TODO : Error reporting to know if initialisation went sucessfully or not.
+
     def getNumberOfHardwareUnits(self):
+        '''
+        Returns the number of HW units connected that are available to be interfaced
+        '''
         numUnits = c_long()
         self.aptdll.GetNumHWUnitsEx(self.HWType, pointer(numUnits))
         return numUnits.value
-    
+
     def getSerialNumber(self, index):
+        '''
+        Returns the Serial Number of the specified index
+        '''
         HWSerialNum = c_long()
         hardwareIndex = c_long(index)
         self.aptdll.GetHWSerialNumEx(self.HWType, hardwareIndex, pointer(HWSerialNum))
         return HWSerialNum
 
     def initializeHardwareDevice(self):
+        '''
+        Initialises the motor.
+        You can only get the position of the motor and move the motor after it has been initialised.
+        Once initiallised, it will not respond to other objects trying to control it, until released.
+        '''
         self.aptdll.InitHWDevice(self.SerialNum)
         # need some kind of error reporting here
         return True
@@ -64,10 +75,10 @@ class APTMotor():
         model = c_buffer(255)
         softwareVersion = c_buffer(255)
         hardwareNotes = c_buffer(255)
-        self.aptdll.GetHWInfo(self.SerialNum, model, 255, softwareVersion, 255, hardwareNotes, 255)      
+        self.aptdll.GetHWInfo(self.SerialNum, model, 255, softwareVersion, 255, hardwareNotes, 255)
         hwinfo = [model.value, softwareVersion.value, hardwareNotes.value]
         return hwinfo
-    
+
     def getStageAxisInformation(self):
         minimumPosition = c_float()
         maximumPosition = c_float()
@@ -76,13 +87,13 @@ class APTMotor():
         self.aptdll.MOT_GetStageAxisInfo(self.SerialNum, pointer(minimumPosition), pointer(maximumPosition), pointer(units), pointer(pitch))
         stageAxisInformation = [minimumPosition.value, maximumPosition.value, units.value, pitch.value]
         return stageAxisInformation
-    
+
     def setStageAxisInformation(self, minimumPosition, maximumPosition):
         minimumPosition = c_float(minimumPosition)
         maximumPosition = c_float(maximumPosition)
         units = c_long(1) #units of mm
-        # Get different pitches of lead screw for moving stages for different lasers. 
-        pitch = c_float(self.config.get_pitch()) 
+        # Get different pitches of lead screw for moving stages for different stages.
+        pitch = c_float(self.config.get_pitch())
         self.aptdll.MOT_SetStageAxisInfo(self.SerialNum, minimumPosition, maximumPosition, units, pitch)
         return True
 
@@ -92,7 +103,7 @@ class APTMotor():
         self.aptdll.MOT_GetHWLimSwitches(self.SerialNum, pointer(reverseLimitSwitch), pointer(forwardLimitSwitch))
         hardwareLimitSwitches = [reverseLimitSwitch.value, forwardLimitSwitch.value]
         return hardwareLimitSwitches
-    
+
     def getVelocityParameters(self):
         minimumVelocity = c_float()
         acceleration = c_float()
@@ -100,66 +111,96 @@ class APTMotor():
         self.aptdll.MOT_GetVelParams(self.SerialNum, pointer(minimumVelocity), pointer(acceleration), pointer(maximumVelocity))
         velocityParameters = [minimumVelocity.value, acceleration.value, maximumVelocity.value]
         return velocityParameters
-    
+
     def setVelocityParameters(self, minVel, acc, maxVel):
         minimumVelocity = c_float(minVel)
         acceleration = c_float(acc)
         maximumVelocity = c_float(maxVel)
         self.aptdll.MOT_SetVelParams(self.SerialNum, minimumVelocity, acceleration, maximumVelocity)
         return True
-    
+
     def getVelocityParameterLimits(self):
         maximumAcceleration = c_float()
         maximumVelocity = c_float()
         self.aptdll.MOT_GetVelParamLimits(self.SerialNum, pointer(maximumAcceleration), pointer(maximumVelocity))
         velocityParameterLimits = [maximumAcceleration.value, maximumVelocity.value]
-        return velocityParameterLimits  
-        
-        ''' Controlling the motors '''
-    def getPosition(self):
+        return velocityParameterLimits
+
+        '''
+        Controlling the motors
+        m = move
+        c = controlled velocity
+        b = backlash correction
+
+        Rel = relative distance from current position.
+        Abs = absolute position
+        '''
+    def getPos(self):
         '''
         Obtain the current absolute position of the stage
         '''
         position = c_float()
         self.aptdll.MOT_GetPosition(self.SerialNum, pointer(position))
-        return position.value    
+        return position.value
 
-    def moveRelative(self, relDistance):
+    def mRel(self, relDistance):
         '''
-        Move a relative distance specified
+        Moves the motor a relative distance specified
+        relDistance    float     Relative position desired
         '''
         relativeDistance = c_float(relDistance)
         self.aptdll.MOT_MoveRelativeEx(self.SerialNum, relativeDistance, True)
         return True
 
-    def moveAbsolute(self, absPosition):
+    def mAbs(self, absPosition):
         '''
-        Moves the motor to the Absolute position specified 
+        Moves the motor to the Absolute position specified
         absPosition    float     Position desired
         '''
         absolutePosition = c_float(absPosition)
         self.aptdll.MOT_MoveAbsoluteEx(self.SerialNum, absolutePosition, True)
         return True
 
-    def moveRelCon(self, relDistance, moveVel=0.5):
+    def mcRel(self, relDistance, moveVel=0.5):
         '''
-        Move a relative distance at a controlled velocity
+        Moves the motor a relative distance specified at a controlled velocity
+        relDistance    float     Relative position desired
+        moveVel        float     Motor velocity, mm/sec
         '''
         # Save velocities to reset after move
         minVel, acc, maxVel = self.getVelocityParameters()
         # Set new desired max velocity
         self.setVelocityParameters(minVel,acc,moveVel)
-        self.moveRelative(relDistance)
+        self.mRel(relDistance)
+        self.setVelocityParameters(minVel,acc,maxVel)
+        return True
+
+    def mcAbs(self, absPosition, moveVel=0.5):
+        '''
+        Moves the motor to the Absolute position specified at a controlled velocity
+        absPosition    float     Position desired
+        moveVel        float     Motor velocity, mm/sec
+        '''
+        # Save velocities to reset after move
+        minVel, acc, maxVel = self.getVelocityParameters()
+        # Set new desired max velocity
+        self.setVelocityParameters(minVel,acc,moveVel)
+        self.mAbs(absPosition)
         self.setVelocityParameters(minVel,acc,maxVel)
         return True
 
         ''' Miscelaneous '''
     def identify(self):
-        ''' Causes the motor to blink the Active LED '''
+        '''
+        Causes the motor to blink the Active LED
+        '''
         self.aptdll.MOT_Identify(self.SerialNum)
         return True
-        
+
     def cleanUpAPT(self):
-        ''' Closes the APT?? '''
+        '''
+        Releases the APT object
+        Use when exiting the program
+        '''
         self.aptdll.APTCleanUp()
-        print 'APT cleaned up'  
+        print 'APT cleaned up'
