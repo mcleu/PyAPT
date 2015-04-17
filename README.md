@@ -1,6 +1,25 @@
 PyAPT
 =====
 Controlling Thorlabs APT using Python code using APT.dll and APT.lib, bypassing the activex controls.
+It even comes with a simple GUI!
+
+**Installation**
+
+Obtain APT.dll and APT.lib from Thorlabs directly, or from the ```APTDLLPack/DLL/``` folder, picking the correct version (```x86``` or ```x64```)
+Place APT.dll, APT.lib and PyAPT.py in the folder from which the scripts will be executed, or in the main add-on folder for python.
+You also require ThorlabsAPT software (obtainable from [ThorLabs APT Software page](http://www.thorlabs.us/software_pages/ViewSoftwarePage.cfm?Code=APT) )
+
+**Running the code**
+
+Ensure correct version (32 or 64 bit) APT.dll and APT.lib are in the folder containing the python script.
+[```example.py```](example.py) contains an example of how to load the module, control the motor, and close the object.
+
+**Using the GUI**
+
+GUI is implemented using QT. First enter the serial number, and press the connect button.
+The GUI will attempt to connect to the APT motor, and probe for it's current position and velocity. If sucessfull, those values will be updated in the respective boxes.
+
+**Support**
 
 PyAPT Supports the following motors:
 
@@ -21,16 +40,6 @@ LTSXXX | 42 | LTS300/LTS150 Long Travel Integrated Driver/Stages
 L490MZ | 43 | L490MZ Integrated Driver/Labjack
 BBD10X | 44 | 1/2/3 Ch benchtop brushless DC servo driver
 
-**Installation**
-
-Obtain APT.dll and APT.lib from Thorlabs directly, or from the ```APTDLLPack/DLL/``` folder, picking the correct version (```x86``` or ```x64```)
-Place APT.dll, APT.lib and PyAPT.py in the folder from which the scripts will be executed, or in the main add-on folder for python.
-You also require ThorlabsAPT software (obtainable from [ThorLabs APT Software page](http://www.thorlabs.us/software_pages/ViewSoftwarePage.cfm?Code=APT) )
-
-**Running the code**
-
-Ensure correct version (32 or 64 bit) APT.dll and APT.lib are in the folder containing the python script.
-[```example.py```](example.py) contains an example of how to load the module, control the motor, and close the object.
 
 **References**
 
