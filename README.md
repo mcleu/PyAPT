@@ -16,8 +16,11 @@ Ensure correct version (32 or 64 bit) APT.dll and APT.lib are in the folder cont
 
 **Using the GUI**
 
+![](https://cloud.githubusercontent.com/assets/5076314/7212786/91687864-e521-11e4-89c9-4a843e87a142.png)
+
 GUI is implemented using QT. First enter the serial number, and press the connect button.
 The GUI will attempt to connect to the APT motor, and probe for it's current position and velocity. If sucessfull, those values will be updated in the respective boxes.
+Pushbuttons under the position box are for movement in microns.
 
 **Support**
 
