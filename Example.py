@@ -23,7 +23,7 @@ Motor1 = APTMotor(83828393, HWTYPE=31) # The number should correspond to the ser
 
 
 # Obtain current position of motor
-print Motor1.getPos()
+print(Motor1.getPos())
 
 # You can control multiple motors by creating more APTMotor Objects
 # Serial numbers can be added later by using setSerialNumber and initializeHardwareDevice
@@ -31,7 +31,7 @@ print Motor1.getPos()
 Motor2 = APTMotor()
 Motor2.setSerialNumber(83828393)
 Motor2.initializeHardwareDevice()
-print Motor2.getPos()
+print(Motor2.getPos())
 
 # Move motor forward by 1mm, wait half a second, and return to original position.
 # mRel is move relative. mAbs is move absolute (go to position xxx)
