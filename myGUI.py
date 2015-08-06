@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 """
 APT Motor Controller GUI for Thorlabs
@@ -8,8 +9,6 @@ V1.0
 Michael Leung
 mcleung@stanford.edu
 """
-DEBUG = True
-
 #Title: OpenFFOCT
 version='1.0'
 #Date: April 17, 2015
@@ -33,7 +32,7 @@ from PyAPT import APTMotor
 #MULTIPROCESS = False
 #USEOCL = False
 class MainWindow(QMainWindow):
-    def __init__(self, parent=None):
+    def __init__(self, parent=None, verbose=False):
         """
         Main window
         """
@@ -59,9 +58,9 @@ class MainWindow(QMainWindow):
         event.accept()
 
 class widgetAPT(QWidget):
-    def __init__(self, parent = None, serial=00000000):
+    def __init__(self, parent = None, serial=00000000, verbose=False):
         super(widgetAPT, self).__init__(parent)
-        self.resize(200, 200)
+        self.resize(200, 100)
         #self.move(100, 100)
         #setGeometry sets both location and size
         #self.setGeometry(50, 50, 1180, 900)
@@ -83,7 +82,7 @@ class widgetAPT(QWidget):
         sVersion.setAlignment(Qt.AlignRight)
         sEmail = QLabel("Michael Leung", self)
         sEmail.resize(100, 40)
-        sEmail.move(100, 35)
+        sEmail.move(100, 30)
         sEmail.setAlignment(Qt.AlignRight)
 
 
@@ -98,7 +97,7 @@ class widgetAPT(QWidget):
         self.txtSerial.setSingleStep(1)
         self.txtSerial.setValue(83840946)
         # qle.textChanged[str].connect(self.onChanged) #do onChanged when changed
-        self._Motor_ = APTMotor()
+        self._Motor_ = APTMotor(verbose=verbose)
 
         # Motor Connect
         self.btnConnect = QPushButton("Connect", self)
@@ -111,7 +110,7 @@ class widgetAPT(QWidget):
         self.btnConnect.clicked[bool].connect(self.connectAPT)
 
         sPos = QLabel("Pos:", self)
-        sPos.resize(60, 20)
+        sPos.resize(70, 20)
         sPos.move(0, 25)
         self.txtPos = QDoubleSpinBox(self)
         self.txtPos.resize(60, 20)
@@ -128,38 +127,38 @@ class widgetAPT(QWidget):
         # Go to position
         btnGOp = QPushButton("Go", self)
         btnGOp.resize(25, 20)
-        btnGOp.move(95, 25)
+        btnGOp.move(100, 25)
         btnGOp.clicked.connect(lambda: self.motAbs(float(self.txtPos.text())))
 
         # Movement buttons
         btnN3 = QPushButton("-100", self)
-        btnN3.resize(30, 20)
+        btnN3.resize(32, 20)
         btnN3.move(0, 50)
         btnN3.clicked.connect(lambda: self.motRel(-.1))
 
         btnN2 = QPushButton("-10", self)
-        btnN2.resize(30, 20)
-        btnN2.move(30, 50)
+        btnN2.resize(32, 20)
+        btnN2.move(33, 50)
         btnN2.clicked.connect(lambda: self.motRel(-.01))
 
         btnN1 = QPushButton("-1", self)
-        btnN1.resize(30, 20)
-        btnN1.move(60, 50)
+        btnN1.resize(32, 20)
+        btnN1.move(66, 50)
         btnN1.clicked.connect(lambda: self.motRel(-.001))
 
         btnP1 = QPushButton("+1", self)
-        btnP1.resize(30, 20)
+        btnP1.resize(32, 20)
         btnP1.move(100, 50)
         btnP1.clicked.connect(lambda: self.motRel(.001))
 
         btnP2 = QPushButton("+10", self)
-        btnP2.resize(30, 20)
-        btnP2.move(130, 50)
+        btnP2.resize(32, 20)
+        btnP2.move(133, 50)
         btnP2.clicked.connect(lambda: self.motRel(.01))
 
         btnP3 = QPushButton("+100", self)
-        btnP3.resize(30, 20)
-        btnP3.move(160, 50)
+        btnP3.resize(32, 20)
+        btnP3.move(166, 50)
         btnP3.clicked.connect(lambda: self.motRel(.1))
 
 
@@ -172,13 +171,13 @@ class widgetAPT(QWidget):
         #self.txtVel.setMaxLength(7)
         self.txtVel.setRange(0, 2.2)
         self.txtVel.setSingleStep(.1)
-        self.txtVel.setValue(0.00000)
+        self.txtVel.setValue(0.000)
         self.txtVel.setToolTip("Current Motor Position")
         self.txtVel.setEnabled(False)
         # Go to velocity
         btnGOv = QPushButton("Go", self)
         btnGOv.resize(25, 20)
-        btnGOv.move(95, 75)
+        btnGOv.move(100, 75)
         btnGOv.clicked.connect(lambda: self._Motor_.setVel(float(self.txtVel.text())))
 
         sBack = QLabel("Backlash:", self)
@@ -247,7 +246,7 @@ if __name__ == '__main__':
     #splash_pix = QPixmap('')
     #splash = QSplashScreen(splash_pix, Qt.WindowStaysOnTopHint)
     #splash.show()
-    form = widgetAPT()
+    form = widgetAPT(verbose=True)
     #form.setWindowState(Qt.WindowMaximized)
     #form.show()
     #splash.finish(form)
