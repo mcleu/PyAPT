@@ -12,7 +12,7 @@ You also require ThorlabsAPT software (obtainable from [ThorLabs APT Software pa
 **Running the code**
 
 Ensure correct version (32 or 64 bit) APT.dll and APT.lib are in the folder containing the python script.
-[```example.py```](example.py) contains an example of how to load the module, control the motor, and close the object.
+[```Example.py```](Example.py) contains an example of how to load the module, control the motor, and close the object.
 
 **Using the GUI**
 
