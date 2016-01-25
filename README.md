@@ -47,7 +47,7 @@ BBD10X | 44 | 1/2/3 Ch benchtop brushless DC servo driver
 **References**
 
 [ThorLabs APT Software page](http://www.thorlabs.us/software_pages/ViewSoftwarePage.cfm?Code=APT)
-[ThorLabs APT Documentation page](http://www.thorlabs.us/software/apt/APT_Communications_Protocol_Rev_14.pdf)
+[ThorLabs APT Documentation page](http://www.thorlabs.us/software/apt/APT_Communications_Protocol_Rev_15.pdf)
 
 **Contact**
 
