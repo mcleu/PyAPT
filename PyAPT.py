@@ -43,7 +43,7 @@ class APTMotor():
 		
         self.verbose = verbose
         self.Connected = False
-        dllname = os.path.join(os.path.dirname(__file__), 'APTx86.dll')
+        dllname = os.path.join(os.path.dirname(__file__), 'APT.dll')
         if not os.path.exists(dllname):
             print "ERROR: DLL not found"
         self.aptdll = windll.LoadLibrary(dllname)
