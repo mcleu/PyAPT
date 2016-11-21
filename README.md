@@ -43,6 +43,7 @@ LTSXXX | 42 | LTS300/LTS150 Long Travel Integrated Driver/Stages
 L490MZ | 43 | L490MZ Integrated Driver/Labjack
 BBD10X | 44 | 1/2/3 Ch benchtop brushless DC servo driver
 
+I have no idea if it supports the KDC101. If you try it out and it does, please let me know so I can update it for others.
 
 **References**
 
@@ -51,7 +52,10 @@ BBD10X | 44 | 1/2/3 Ch benchtop brushless DC servo driver
 
 **Contact**
 
-This is still a rough copy that I am improving as I work on my project. Please report any bugs, and feel free to email me comments or suggestions. Even better: make the changes and push them back to me!
+This is still a rough copy that I am improving as I work on my project.
+Please report any bugs, and feel free to let me know of any comments or suggestions. 
+*Please report bugs and questions by [creating an issues](https://github.com/mcleung/PyAPT/issues)*
+That way, others can see your questions and contribute to them too.
+Even better: make the changes and push them back to me!
 
 Michael Leung
-mcleung@stanford.edu
