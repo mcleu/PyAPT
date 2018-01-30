@@ -23,7 +23,7 @@ print os.getcwd()
 
 
 class APTMotor():
-    def __init__(self, SerialNum=None, HWTYPE=31, verbose=False):
+    def __init__(self, SerialNum=None, HWTYPE=31, verbose=False, dllname='APT.dll'):
         '''
         HWTYPE_BSC001		11	// 1 Ch benchtop stepper driver
         HWTYPE_BSC101		12	// 1 Ch benchtop stepper driver
@@ -40,10 +40,9 @@ class APTMotor():
         HWTYPE_L490MZ		43	// L490MZ Integrated Driver/Labjack
         HWTYPE_BBD10X		44	// 1/2/3 Ch benchtop brushless DC servo driver
         '''
-		
+
         self.verbose = verbose
         self.Connected = False
-        dllname = os.path.join(os.path.dirname(__file__), 'APT.dll')
         if not os.path.exists(dllname):
             print "ERROR: DLL not found"
         self.aptdll = windll.LoadLibrary(dllname)
@@ -286,7 +285,7 @@ class APTMotor():
         if self.verbose: print 'mbAbs SUCESS'
         return True
 
-		
+
     def go_home(self):
         '''
         Move the stage to home position and reset position entry
@@ -295,10 +294,10 @@ class APTMotor():
         if not self.Connected:
             raise Exception('Please connect first! Use initializeHardwareDevice')
         if self.verbose: print 'go_home SUCESS'
-        self.aptdll.MOT_MoveHome(self.SerialNum)	
+        self.aptdll.MOT_MoveHome(self.SerialNum)
         return True
-		
-		
+
+
         ''' Miscelaneous '''
     def identify(self):
         '''
