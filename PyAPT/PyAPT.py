@@ -120,12 +120,12 @@ class APTMotor():
         stageAxisInformation = [minimumPosition.value, maximumPosition.value, units.value, pitch.value]
         return stageAxisInformation
 
-    def setStageAxisInformation(self, minimumPosition, maximumPosition):
-        minimumPosition = c_float(minimumPosition)
-        maximumPosition = c_float(maximumPosition)
-        units = c_long(1) #units of mm
+    def setStageAxisInformation(self, stageAxisInformation):
+        minimumPosition = c_float(stageAxisInformation[0])
+        maximumPosition = c_float(stageAxisInformation[1])
+        units = c_long(stageAxisInformation[2]) #units of mm
         # Get different pitches of lead screw for moving stages for different stages.
-        pitch = c_float(self.config.get_pitch())
+        pitch = c_float(stageAxisInformation[3])
         self.aptdll.MOT_SetStageAxisInfo(self.SerialNum, minimumPosition, maximumPosition, units, pitch)
         return True
 
