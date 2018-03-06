@@ -1,3 +1,5 @@
+**APT is being replaced by kinesis. Please use [Instrumental](https://github.com/mabuchilab/Instrumental/) with Kinesis **
+
 PyAPT
 =====
 Controlling Thorlabs APT using Python code using APT.dll and APT.lib, bypassing the activex controls.
